@@ -1,0 +1,7 @@
+# ubuntu-lab for HEP-DL-Lab
+
+This docker environment targets for development of HEP-DL-Lab.
+
+## v1.0 updates
+- support for usual softwares used in HEP (MG5, Pythia8, Delphes3, FastJet3).
+- support for machine learning.
