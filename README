@@ -1,6 +1,6 @@
-# ubuntu-lab for HEP-DL-Lab
+# ubuntu-lab for HEP-ML-Lab
 
-This docker environment targets for development of HEP-DL-Lab.
+This docker environment targets for development of HEP-ML-Lab.
 
 ## 1.1 updates
 - Remove GUILD_HOME
