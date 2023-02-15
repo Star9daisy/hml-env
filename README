@@ -2,6 +2,10 @@
 
 This docker environment targets for development of HEP-DL-Lab.
 
-## v1.0 updates
+## 1.1 updates
+- Remove GUILD_HOME
+- Set zsh as the default shell and add plugins
+
+## 1.0 updates
 - support for usual softwares used in HEP (MG5, Pythia8, Delphes3, FastJet3).
 - support for machine learning.
