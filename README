@@ -1,6 +1,10 @@
-# ubuntu-lab for HEP-ML-Lab
+# Development environment for HML (HEP ML Lab)
 
-This docker environment targets for development of HEP-ML-Lab.
+This docker environment targets for development of HML.
+
+## 1.2 updates
+- Change zsh into official intallation way
+- Fix "which conda" not correctly showing the conda path
 
 ## 1.1 updates
 - Remove GUILD_HOME
