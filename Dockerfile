@@ -28,16 +28,10 @@ RUN apt-get install -yq htop vim wget curl tree duc screen &&\
 
 # zsh ------------------------------------------------------------------------ #
 RUN apt-get -yq install zsh
-RUN wget https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh &&\
-    sh zsh-in-docker.sh \
-    -t robbyrussell \
-    -p z \
-    -p git \
-    -p https://github.com/zsh-users/zsh-autosuggestions \
-    -p https://github.com/zsh-users/zsh-syntax-highlighting &&\
-    rm zsh-in-docker.sh &&\
-    echo "\n# fix which conda" >> ~/.zshrc &&\
-    echo "alias which=\"which -p\"" >> ~/.zshrc
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &&\
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions &&\
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting &&\
+    sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
 
 # miniconda3 ----------------------------------------------------------------- #
 ENV MINICONDA3_DIR=/root/miniconda3 \
@@ -45,7 +39,9 @@ ENV MINICONDA3_DIR=/root/miniconda3 \
 COPY ${SHARED_DIR}/${MINICONDA3_FILE} .
 RUN bash ${MINICONDA3_FILE} -b && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
-    rm ${MINICONDA3_FILE}
+    rm ${MINICONDA3_FILE} &&\
+    echo "\n# fix which conda" >> ~/.zshrc &&\
+    echo "alias which=\"which -p\"" >> ~/.zshrc
 # disable tensorflow logging and limit GPU usage
 ENV PATH=${MINICONDA3_DIR}/bin:${PATH} \
     TF_CPP_MIN_LOG_LEVEL=3 \
@@ -62,12 +58,9 @@ RUN pip install -r requirements.txt && \
     echo "alias ip=\"curl http://ip-api.com/json\"" >> ~/.zshrc
 
 # dependences ---------------------------------------------------------------- #
-RUN apt-get update && apt-get install -yq \
-    # cern root
-    dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev \
-    # madgraph
-    gfortran make rsync ghostscript gnuplot && \
-    apt clean
+RUN apt-get update && apt-get install -yq dpkg-dev cmake g++ gcc binutils
+RUN apt-get update && apt-get install -yq libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev
+RUN apt-get update && apt-get install -yq gfortran make rsync ghostscript gnuplot
 
 # root6 ---------------------------------------------------------------------- #
 ENV ROOT6_DIR=${INSTALL_DIR}/root6 \
