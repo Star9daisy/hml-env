@@ -35,7 +35,7 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/t
 
 # miniconda3 ----------------------------------------------------------------- #
 ENV MINICONDA3_DIR=/root/miniconda3 \
-    MINICONDA3_FILE=Miniconda3-latest-Linux-x86_64.sh
+    MINICONDA3_FILE=Miniconda3-py38_23.1.0-1-Linux-x86_64.sh
 COPY ${SHARED_DIR}/${MINICONDA3_FILE} .
 RUN bash ${MINICONDA3_FILE} -b && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
@@ -118,7 +118,7 @@ RUN mkdir src && \
 
 # pythia8 -------------------------------------------------------------------- #
 ENV PYTHIA8_DIR=${INSTALL_DIR}/pythia8 \
-    PYTHIA8_FILE=pythia8306.tgz
+    PYTHIA8_FILE=pythia8244.tar
 COPY ${SHARED_DIR}/${PYTHIA8_FILE} .
 RUN mkdir src && \
     tar xf ${PYTHIA8_FILE} --strip=1 --directory=src && cd src && \
