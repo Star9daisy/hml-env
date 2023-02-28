@@ -2,6 +2,12 @@
 
 This docker environment targets for development of HML.
 
+## 1.3 updates
+- Change python version from 3.9 to 3.8 to be compatible with pyROOT and pythia8
+- Add lhapdf6.5.3 to support usage in MG5
+- Add support to conda version Pythia8
+- Fix the pyROOT not found in miniconda python
+
 ## 1.2 updates
 - Change zsh into official intallation way
 - Fix "which conda" not correctly showing the conda path
