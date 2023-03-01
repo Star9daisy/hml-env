@@ -63,7 +63,7 @@ ENV PATH=${MINICONDA3_DIR}/bin:${PATH} \
 # ================================================================================================ #
 # python packages -------------------------------------------------------------------------------- #
 RUN pip install numpy pandas matplotlib jupyterlab tensorflow numpythia pyjet
-RUN conda install -c conda-forge pythia8
+RUN conda install -c conda-forge pythia8 && rm ${MINICONDA3_DIR}/bin/pythia8-config
 
 # root dependences ------------------------------------------------------------------------------- #
 RUN apt-get update && apt-get install -yq dpkg-dev cmake g++ gcc binutils
@@ -112,7 +112,8 @@ RUN mkdir ${MADGRAPH5_DIR} && \
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib && \
     export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$ROOTSYS/lib && \
     echo "install Delphes" | mg5_aMC && \
-    rm py.py
+    rm py.py && \
+    sed -i 's/# auto_update = 7/auto_update = 0/g' ${MADGRAPH5_DIR}/input/mg5_configuration.txt
 
 # fastjet3 --------------------------------------------------------------------------------------- #
 ENV FASTJET3_DIR=${INSTALL_DIR}/fastjet3 \
