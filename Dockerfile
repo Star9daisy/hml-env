@@ -62,9 +62,8 @@ ENV PATH=${MINICONDA3_DIR}/bin:${PATH} \
 #                                           Main Programs                                          #
 # ================================================================================================ #
 # python packages -------------------------------------------------------------------------------- #
-RUN pip install numpy pandas matplotlib jupyterlab tensorflow numpythia pyjet
+RUN pip install numpy pandas matplotlib jupyterlab tensorflow
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-RUN conda install -c conda-forge pythia8 && rm ${MINICONDA3_DIR}/bin/pythia8-config
 
 # root dependences ------------------------------------------------------------------------------- #
 RUN apt-get update && apt-get install -yq dpkg-dev cmake g++ gcc binutils
