@@ -16,6 +16,12 @@
 
 ## History
 
+### 1.5
+- Fix auto-update issue of madgraph5
+    > `auto_update = 0` does not work as it says "no update check" but "update check every time". So it has been set to 600 meaning 600 days.
+- Remove pythia8 from conda-force
+    > since `PYTHIA8DATA` environment variable is reset by it without notification and as a consequence, madgraph5 or commands from delphes raise error associated with the version of pythia8.
+
 ### 1.4.1
 - Fix the conflict of pythia8 inside of madgraph5 and the one installed by conda
 
