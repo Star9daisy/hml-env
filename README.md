@@ -1,20 +1,24 @@
 # Environment for high energy physics and machine learning lab (HEP ML Lab)
 
 ## Description
-`hml-env` is a comprehensive environment designed to facilitate research and development at the crossroads of high-energy physics and machine learning. Utilizing Docker technology, it offers a seamless, unified environment that ensures compatibility and simplifies configuration.
+`hml-env` is a comprehensive environment designed to facilitate research and
+development at the crossroads of high-energy physics and machine learning.
+Utilizing Docker technology, it offers a seamless, unified environment that
+ensures compatibility and simplifies configuration.
 
 `hml-env` supports a wide range of essential tools, including:
 
-- MadGraph5
-- Pythia8
-- FastJet3
-- Delphes3
-- ROOT6
 - Python3.8
-- TensorFlow
-- PyTorch
+- ROOT6
+- MadGraph5
 
 ## History
+
+### 1.6
+- Remove python packages
+- Remove external Delphes, FastJet, fjcontrib
+- Change entry point to allow users to run commands directly and launch zsh by
+  default
 
 ### 1.5
 - Fix auto-update issue of madgraph5
