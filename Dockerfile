@@ -4,8 +4,7 @@ FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
 #                                Basic Settings                                #
 # ============================================================================ #
 ENV DEBIAN_FRONTEND=noninteractive
-ENV SHARED_DIR=share INSTALL_DIR=/root/softwares WORK_DIR=/root/workspace
-ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+ENV SHARED_DIR=share INSTALL_DIR=/root/softwares
 
 # ============================================================================ #
 #                              Basic Dependencies                              #
@@ -15,10 +14,11 @@ WORKDIR ${INSTALL_DIR}
 # general -------------------------------------------------------------------- #
 RUN rm /etc/apt/sources.list.d/cuda.list && \
     apt-get update && apt-get install -yq \
-    apt-utils software-properties-common \
+    apt-utils software-properties-common locales\
     vim wget curl tree duc screen && \
     apt-add-repository ppa:git-core/ppa && \
-    apt-get update && apt-get install -yq git
+    apt-get update && apt-get install -yq git && \
+    locale-gen en_US.UTF-8
 
 # zsh ------------------------------------------------------------------------ #
 RUN apt-get -yq install zsh && \
@@ -95,10 +95,29 @@ RUN mkdir ${MADGRAPH5_DIR} && \
     echo "install Delphes" | mg5_aMC && \
     rm py.py && \
     sed -i 's/# auto_update = 7/auto_update = 600/g' ${MADGRAPH5_DIR}/input/mg5_configuration.txt && \
-    sed -i 's/^# lhapdf_py3 = lhapdf-config$/lhapdf_py3 = lhapdf-config/' ${MADGRAPH5_DIR}/input/mg5_configuration.txt
+    sed -i 's/^# lhapdf_py3 = lhapdf-config$/lhapdf_py3 = lhapdf-config/' ${MADGRAPH5_DIR}/input/mg5_configuration.txt && \
+    echo "# delphes3" >> ~/.zshrc && \
+    echo "export LD_LIBRARY_PATH=${MADGRAPH5_DIR}/Delphes:\$LD_LIBRARY_PATH" >> ~/.zshrc && \
+    echo "export ROOT_INCLUDE_PATH=${MADGRAPH5_DIR}/Delphes/external:\$ROOT_INCLUDE_PATH" >> ~/.zshrc
+
+# ============================================================================ #
+#                                Openssh Server                                #
+# ============================================================================ #
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:docker' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+# Creating a new script to start both sshd and any command passed as an argument
+RUN echo '#!/bin/zsh' > /start.sh \
+    && echo '/usr/sbin/sshd -D' >> /start.sh \
+    && echo 'exec "$@"' >> /start.sh \
+    && chmod +x /start.sh
+
+EXPOSE 22
 
 # ============================================================================ #
 #                                    Ending                                    #
 # ============================================================================ #
-WORKDIR ${WORK_DIR}
-CMD [ "zsh" ]
+CMD ["/start.sh", "zsh"]
