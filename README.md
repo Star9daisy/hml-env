@@ -14,6 +14,10 @@ ensures compatibility and simplifies configuration.
 
 ## History
 
+### 1.7
+- Support ssh server
+- Fix locales and Delphes enviroment variables
+
 ### 1.6
 - Remove python packages
 - Remove external Delphes, FastJet, fjcontrib
