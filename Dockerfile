@@ -59,9 +59,7 @@ RUN apt-get update && apt-get install -yq \
 ADD https://root.cern/download/root_v6.24.02.Linux-ubuntu20-x86_64-gcc9.3.tar.gz /tmp/root6.tar.gz
 ENV ROOT6_DIR=${INSTALL_DIR}/root6
 RUN mkdir ${ROOT6_DIR} && \
-    tar xf /tmp/root6.tar.gz --strip=1 --directory=${ROOT6_DIR} && \ 
-    echo "# root6" >> ~/.zshrc && \
-    echo "source ${ROOT6_DIR}/bin/thisroot.sh" >> ~/.zshrc
+    tar xf /tmp/root6.tar.gz --strip=1 --directory=${ROOT6_DIR}
 
 # lhapdf --------------------------------------------------------------------- #
 ADD https://lhapdf.hepforge.org/downloads/LHAPDF-6.5.3.tar.gz /tmp/lhapdf.tar.gz
@@ -116,6 +114,26 @@ RUN echo '#!/bin/zsh' > /start.sh \
     && chmod +x /start.sh
 
 EXPOSE 22
+
+# ============================================================================ #
+#                             Environment Variables                            #
+# ============================================================================ #
+# As users ssh into the container, the environment set by Docker won't appear
+# in .zshrc, so here we export all variables into .zshrc
+RUN echo "# Docker env variables" >> ~/.zshrc && \
+    grep '^export ' ~/.zshrc | awk '{print $2}' | awk -F= '{print $1}' | sort | uniq > /tmp/existing-vars.txt && \
+    printenv > /tmp/container-env.txt && \
+    while IFS='=' read -r var value; do \
+    if grep -q "^$var\$" /tmp/existing-vars.txt; then \
+    echo "export $var=\"\$$var:$value\"" >> ~/.zshrc; \
+    else \
+    echo "export $var=\"$value\"" >> ~/.zshrc; \
+    fi; \
+    done < /tmp/container-env.txt
+
+# Since cern root will set environment variables as well, we put it in the final
+RUN echo "# root6" >> ~/.zshrc && \
+    echo "source ${ROOT6_DIR}/bin/thisroot.sh" >> ~/.zshrc
 
 # ============================================================================ #
 #                                    Ending                                    #
