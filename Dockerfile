@@ -128,7 +128,7 @@ RUN apt install figlet && \
 # As users ssh into the container, the environment set by Docker won't appear
 # in .zshrc, so here we export all variables into .zshrc
 RUN echo "# Docker env variables" >> ~/.zshrc && \
-    grep '^export ' ~/.zshrc | awk '{print $2}' | awk -F= '{print $1}' | sort | uniq > /tmp/existing-vars.txt && \
+    grep -P '^\s*export ' ~/.zshrc | awk '{print $2}' | awk -F= '{print $1}' | sort | uniq > /tmp/existing-vars.txt && \
     printenv > /tmp/container-env.txt && \
     while IFS='=' read -r var value; do \
     if grep -q "^$var\$" /tmp/existing-vars.txt; then \
