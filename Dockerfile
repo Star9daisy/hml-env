@@ -111,7 +111,7 @@ RUN mkdir /var/run/sshd && \
 
 # Creating a new script to start both sshd and any command passed as an argument
 RUN echo '#!/bin/zsh' > /start.sh \
-    && echo '/usr/sbin/sshd -D' >> /start.sh \
+    && echo '/usr/sbin/sshd' >> /start.sh \
     && echo 'exec "$@"' >> /start.sh \
     && chmod +x /start.sh
 
