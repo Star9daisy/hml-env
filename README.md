@@ -14,6 +14,9 @@ ensures compatibility and simplifies configuration.
 
 ## History
 
+### 1.7.3
+- Fix missing catch of environment variables due to spaces at the beginning
+
 ### 1.7.2
 - Fix locale via environment variables
 - Add welcome banner when a user uses ssh
