@@ -14,6 +14,10 @@ ensures compatibility and simplifies configuration.
 
 ## History
 
+### 1.7.2
+- Fix locale via environment variables
+- Add welcome banner when a user uses ssh
+
 ### 1.7.1
 - Fix environment variables missing when sshing into a container
 
