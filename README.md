@@ -14,6 +14,9 @@ ensures compatibility and simplifies configuration.
 
 ## History
 
+### 1.7.1
+- Fix environment variables missing when sshing into a container
+
 ### 1.7
 - Support ssh server
 - Fix locales and Delphes enviroment variables
