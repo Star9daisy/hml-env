@@ -116,7 +116,7 @@ RUN echo '#!/bin/zsh' > /start.sh \
 EXPOSE 22
 
 # Setup banner
-ENV VERSION 1.7.2
+ENV VERSION 1.7.3
 RUN apt install figlet && \
     figlet -f slant "hml env ${VERSION}" >> /etc/banner.txt && \
     sed -i 's/#Banner none/Banner \/etc\/banner.txt/' /etc/ssh/sshd_config && \
