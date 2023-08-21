@@ -138,4 +138,8 @@ RUN echo "# root6" >> ~/.zshrc && \
 # ============================================================================ #
 #                                    Ending                                    #
 # ============================================================================ #
+WORKDIR /root
+# Change the default shell for root user from bash to zsh when a user ssh to
+# the container
+RUN sed -i 's#^root:x:0:0:root:/root:/bin/bash#root:x:0:0:root:/root:/bin/zsh#' /etc/passwd
 CMD ["/start.sh", "zsh"]
