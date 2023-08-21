@@ -5,6 +5,7 @@ FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
 # ============================================================================ #
 ENV DEBIAN_FRONTEND=noninteractive
 ENV SHARED_DIR=share INSTALL_DIR=/root/softwares
+ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 
 # ============================================================================ #
 #                              Basic Dependencies                              #
@@ -14,11 +15,10 @@ WORKDIR ${INSTALL_DIR}
 # general -------------------------------------------------------------------- #
 RUN rm /etc/apt/sources.list.d/cuda.list && \
     apt-get update && apt-get install -yq \
-    apt-utils software-properties-common locales\
+    apt-utils software-properties-common \
     vim wget curl tree duc screen && \
     apt-add-repository ppa:git-core/ppa && \
-    apt-get update && apt-get install -yq git && \
-    locale-gen en_US.UTF-8
+    apt-get update && apt-get install -yq git
 
 # zsh ------------------------------------------------------------------------ #
 RUN apt-get -yq install zsh && \
@@ -114,6 +114,13 @@ RUN echo '#!/bin/zsh' > /start.sh \
     && chmod +x /start.sh
 
 EXPOSE 22
+
+# Setup banner
+ENV VERSION 1.7.2
+RUN apt install figlet && \
+    figlet -f slant "hml env ${VERSION}" >> /etc/banner.txt && \
+    sed -i 's/#Banner none/Banner \/etc\/banner.txt/' /etc/ssh/sshd_config && \
+    chmod -x /etc/update-motd.d/*
 
 # ============================================================================ #
 #                             Environment Variables                            #
