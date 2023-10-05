@@ -14,6 +14,10 @@ ensures compatibility and simplifies configuration.
 
 ## History
 
+### 1.8.0
+- Upgrade cuda:11.2.2 to 11.8.0
+- Support for modifying password at runtime
+
 ### 1.7.3
 - Fix missing catch of environment variables due to spaces at the beginning
 
