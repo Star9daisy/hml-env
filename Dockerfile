@@ -47,17 +47,22 @@ ENV MINICONDA3_DIR=/root/miniconda3
 RUN bash /tmp/miniconda.sh -b -u -p ${MINICONDA3_DIR} && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
     ${MINICONDA3_DIR}/bin/conda install -c conda-forge libpython-static -y
-
-# disable tensorflow logging and limit GPU usage
-ENV PATH=${MINICONDA3_DIR}/bin:${PATH} \
-    TF_CPP_MIN_LOG_LEVEL=3 \
-    TF_FORCE_GPU_ALLOW_GROWTH=true
+ENV PATH=${MINICONDA3_DIR}/bin:${PATH}
 
 # ============================================================================ #
 #                                 Main Programs                                #
 # ============================================================================ #
 # python --------------------------------------------------------------------- #
-RUN pip install numpy pandas matplotlib
+RUN pip install --no-cache-dir numpy pandas matplotlib
+RUN pip install --no-cache-dir tensorflow==2.14
+RUN pip install --no-cache-dir --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+RUN pip install --no-cache-dir torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN pip install --no-cache-dir keras==3.0.0 --upgrade
+
+ENV TF_CPP_MIN_LOG_LEVEL=3 \
+    TF_FORCE_GPU_ALLOW_GROWTH=true \
+    XLA_PYTHON_CLIENT_PREALLOCATE=false \
+    XLA_PYTHON_CLIENT_ALLOCATOR=platform
 
 # root6 ---------------------------------------------------------------------- #
 # ADD https://root.cern/download/root_v6.24.02.Linux-ubuntu20-x86_64-gcc9.3.tar.gz /tmp/root6.tar.gz
