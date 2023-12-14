@@ -6,6 +6,16 @@
 
 With the seamless integration of Docker technology, it offers a unified and user-friendly environment that ensures compatibility and simplifies configuration. Whether you're a researcher or a developer, `hml-env` comes pre-installed with commonly used software, allowing you to quickly start your work in the field of high-energy physics and machine learning phenomenology. It provides a comprehensive and convenient platform to support your projects and experiments.
 
+## Prerequisites
+1. [Docker](https://docs.docker.com/engine/install/ubuntu/)
+2. [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+3. [NVIDIA GPU Driver](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html)
+
+## Installtion
+```bash
+docker pull star9daisy/hml-env:2.0.0
+```
+
 ## Softwares
 
 `hml-env` is based on `nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04`. Below is a pre-installed software list:
