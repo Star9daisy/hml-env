@@ -41,10 +41,11 @@ RUN apt-get -yq install zsh && \
     sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
 
 # miniconda3 ----------------------------------------------------------------- #
-# ADD https://repo.anaconda.com/miniconda/Miniconda3-py310_23.10.0-1-Linux-x86_64.sh /tmp/miniconda.sh
-ADD assets/Miniconda3-py310_23.10.0-1-Linux-x86_64.sh /tmp/miniconda.sh
-ENV MINICONDA3_DIR=/root/miniconda3
-RUN bash /tmp/miniconda.sh -b -u -p ${MINICONDA3_DIR} && \
+ENV MINICONDA3_DIR=/root/miniconda3 \
+    MINICONDA3_FILE=Miniconda3-py310_23.10.0-1-Linux-x86_64.sh
+RUN mkdir MINICONDA3_DIR && \
+    wget -O ${MINICONDA3_FILE} https://repo.anaconda.com/miniconda/${MINICONDA3_FILE} && \
+    bash ${MINICONDA3_FILE} -b -u -p ${MINICONDA3_DIR} && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
     ${MINICONDA3_DIR}/bin/conda install -c conda-forge libpython-static -y
 ENV PATH=${MINICONDA3_DIR}/bin:${PATH}
@@ -65,11 +66,12 @@ ENV TF_CPP_MIN_LOG_LEVEL=3 \
     XLA_PYTHON_CLIENT_ALLOCATOR=platform
 
 # root6 ---------------------------------------------------------------------- #
-# ADD https://root.cern/download/root_v6.24.02.Linux-ubuntu20-x86_64-gcc9.3.tar.gz /tmp/root6.tar.gz
-COPY assets/root_v6.26.14.source.tar.gz /tmp/root6.tar.gz
-ENV ROOT6_DIR=${INSTALL_DIR}/root6
-RUN mkdir ${ROOT6_DIR} build src && cd build && \
-    tar xf /tmp/root6.tar.gz --strip=1 --directory=../src && \
+ENV ROOT6_DIR=${INSTALL_DIR}/root6 \
+    ROOT6_FILE=root_v6.26.14.source.tar.gz
+RUN mkdir ${ROOT6_DIR} build src && \
+    wget -O ${ROOT6_FILE} https://root.cern/download/${ROOT6_FILE} && \
+    tar xf ${ROOT6_FILE} --strip=1 --directory=src && \
+    cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=${ROOT6_DIR} -DPython_EXECUTABLE=~/miniconda3/bin/python ../src && \
     cmake --build . --target install -j $(nproc) && \
     echo "# root6" >> ~/.zshrc && \
@@ -77,10 +79,11 @@ RUN mkdir ${ROOT6_DIR} build src && cd build && \
     cd ${INSTALL_DIR} && rm -rf build src
 
 # lhapdf --------------------------------------------------------------------- #
-COPY assets/LHAPDF-6.5.3.tar /tmp/lhapdf.tar
-ENV LHAPDF6_DIR=${INSTALL_DIR}/lhapdf6
-RUN mkdir src && \
-    tar xf /tmp/lhapdf.tar --strip=1 --directory=src && cd src && \
+ENV LHAPDF6_DIR=${INSTALL_DIR}/lhapdf6 \
+    LHAPDF6_FILE=LHAPDF-6.5.3.tar.gz
+RUN mkdir ${LHAPDF6_DIR} src && \
+    wget -O ${LHAPDF6_FILE} https://lhapdf.hepforge.org/downloads/?f=${LHAPDF6_FILE} && \
+    tar xf ${LHAPDF6_FILE} --strip=1 --directory=src && cd src && \
     ./configure --prefix=${LHAPDF6_DIR} && \
     make -j $(nproc) && make install && \
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:~/miniconda3/lib" && \
@@ -94,11 +97,11 @@ RUN mkdir src && \
     lhapdf install NNPDF23_lo_as_0130_qed
 
 # madgraph5 ------------------------------------------------------------------ #
-COPY assets/MG5_aMC_v3.5.2.tar /tmp/madgraph5.tar
-ENV MADGRAPH5_DIR=${INSTALL_DIR}/madgraph5
+ENV MADGRAPH5_DIR=${INSTALL_DIR}/madgraph5 \
+    MADGRAPH5_FILE=MG5_aMC_v3.5.2.tar.gz
 RUN mkdir ${MADGRAPH5_DIR} && \ 
-    tar xf /tmp/madgraph5.tar --strip=1 --directory=${MADGRAPH5_DIR} && \
-    rm /tmp/madgraph5.tar && \
+    wget -O ${MADGRAPH5_FILE} https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/${MADGRAPH5_FILE} && \
+    tar xf ${MADGRAPH5_FILE} --strip=1 --directory=${MADGRAPH5_DIR} && \
     ln -fs ${MADGRAPH5_DIR}/bin/mg5_aMC /usr/local/bin/ && \
     echo "n" | mg5_aMC && \
     echo "install pythia8" | mg5_aMC && \
