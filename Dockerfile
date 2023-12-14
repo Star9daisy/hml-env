@@ -50,7 +50,8 @@ RUN mkdir ${MINICONDA3_DIR} && \
     wget -O ${MINICONDA3_FILE} https://repo.anaconda.com/miniconda/${MINICONDA3_FILE} && \
     bash ${MINICONDA3_FILE} -b -u -p ${MINICONDA3_DIR} && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
-    ${MINICONDA3_DIR}/bin/conda install -c conda-forge libpython-static -y
+    ${MINICONDA3_DIR}/bin/conda install -c conda-forge libpython-static -y && \
+    rm -rf ${MINICONDA3_FILE}
 ENV PATH=${MINICONDA3_DIR}/bin:${PATH}
 
 # ============================================================================ #
