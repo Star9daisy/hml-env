@@ -20,21 +20,21 @@ docker pull star9daisy/hml-env:2.0.0
 
 `hml-env` is based on `nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04`. Below is a pre-installed software list:
 
-| Type                | Version                                                                                         |
-| ------------------- | ----------------------------------------------------------------------------------------------- |
-| General             | shell: zsh (oh-my-zsh)                                                                          |
-|                     | Python: 3.10.13 (Miniconda)                                                                     |
-| High energy physics | ROOT (https://root.cern): 6.26.14                                                               |
-|                     | LHAPDF (https://lhapdf.hepforge.org): 6.5.3                                                     |
-|                     | MadGraph5_aMC@NLO (https://launchpad.net/mg5amcnlo): 3.5.2 (with Pythia8 and Delphes installed) |
-| Machine learning    | TensorFlow: 2.14.0                                                                              |
-|                     | PyTorch: 2.1.0+cu118                                                                            |
-|                     | Jax: 0.4.20 (with cuda)                                                                         |
-|                     | Keras: 3.0.0                                                                                    |
+| Type                | Version                                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| General             | shell: zsh (oh-my-zsh)                                                                           |
+|                     | Python: 3.10.13 (Miniconda)                                                                      |
+| High energy physics | [ROOT](https://root.cern): 6.26.14                                                               |
+|                     | [LHAPDF](https://lhapdf.hepforge.org): 6.5.3                                                     |
+|                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.2 (with Pythia8 and Delphes installed) |
+| Machine learning    | TensorFlow: 2.14.0                                                                               |
+|                     | PyTorch: 2.1.0+cu118                                                                             |
+|                     | Jax: 0.4.20 (with cuda)                                                                          |
+|                     | Keras: 3.0.0                                                                                     |
 
 - Set `TF_CPP_MIN_LOG_LEVEL=3` and `TF_FORCE_GPU_ALLOW_GROWTH=true` to reduce running logs and to control GPU memory usage of TensorFlow;
 - Set `XLA_PYTHON_CLIENT_ALLOCATOR=platform` to control GPU memory allocation of Jax, though it’s not recommended by official doc. Tried `XLA_PYTHON_CLIENT_PREALLOCATE=false` but it does not work as normal.
-- Since Keras 3 that support multiple backends is just published, its requirement of TensorFlow > 2.15 could not be meet. According the document ([link](https://keras.io/getting_started/)), we check the universal environment of Colab ([link](https://colab.sandbox.google.com/drive/13cpd3wCwEHpsmypY9o6XB6rXgBm5oSxu)) and make all three backends work in `hml-env`.
+- Since Keras 3 that support multiple backends is just published, its requirement of TensorFlow > 2.15 could not be meet. According the [document](https://keras.io/getting_started/), we check the universal environment of [Colab](https://colab.sandbox.google.com/drive/13cpd3wCwEHpsmypY9o6XB6rXgBm5oSxu) and make all three backends work in `hml-env`.
 
 ## Daily Usage
 
