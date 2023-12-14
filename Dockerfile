@@ -50,7 +50,6 @@ RUN mkdir ${MINICONDA3_DIR} && \
     wget -O ${MINICONDA3_FILE} https://repo.anaconda.com/miniconda/${MINICONDA3_FILE} && \
     bash ${MINICONDA3_FILE} -b -u -p ${MINICONDA3_DIR} && \
     ${MINICONDA3_DIR}/bin/conda init zsh && \
-    ${MINICONDA3_DIR}/bin/conda install -c conda-forge libpython-static -y && \
     rm -rf ${MINICONDA3_FILE}
 ENV PATH=${MINICONDA3_DIR}/bin:${PATH}
 
@@ -89,6 +88,7 @@ RUN mkdir ${LHAPDF6_DIR} src && \
     wget -O ${LHAPDF6_FILE} https://lhapdf.hepforge.org/downloads/?f=${LHAPDF6_FILE} && \
     tar xf ${LHAPDF6_FILE} --strip=1 --directory=src && cd src && \
     ./configure --prefix=${LHAPDF6_DIR} && \
+    sed -i 's/pyargs += " " + libpy/pyargs += " " + "-L\/root\/miniconda3\/lib -lpython3.10"/' ./wrappers/python/build.py && \
     make -j $(nproc) && make install && \
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:~/miniconda3/lib" && \
     ln -fs ${LHAPDF6_DIR}/bin/lhapdf* /usr/local/bin/ && \
