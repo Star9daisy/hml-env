@@ -18,13 +18,15 @@ RUN rm /etc/apt/sources.list.d/cuda.list && \
     apt-utils software-properties-common \
     vim wget curl tree duc screen && \
     apt-add-repository ppa:git-core/ppa && \
-    apt-get update && apt-get install -yq git
+    apt-get update && apt-get install -yq git && \
+    apt-get clean
 
 # root dependencies ---------------------------------------------------------- #
 RUN apt-get update && apt-get install -yq \
     dpkg-dev cmake g++ gcc binutils \
     libx11-dev libxpm-dev libxft-dev libxext-dev python3 libssl-dev \
-    gfortran make rsync ghostscript gnuplot
+    gfortran make rsync ghostscript gnuplot && \
+    apt-get clean
 
 # proxy ---------------------------------------------------------------------- #
 RUN echo "alias setproxy=\"export ALL_PROXY=socks5://172.17.0.1:7890\"" >> ~/.zshrc && \
@@ -38,7 +40,8 @@ RUN apt-get -yq install zsh && \
     sh -c "$(wget -O- https://install.ohmyz.sh)" && \
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
-    sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
+    sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc && \
+    apt-get clean
 
 # miniconda3 ----------------------------------------------------------------- #
 ENV MINICONDA3_DIR=/root/miniconda3 \
@@ -76,7 +79,7 @@ RUN mkdir ${ROOT6_DIR} build src && \
     cmake --build . --target install -j $(nproc) && \
     echo "# root6" >> ~/.zshrc && \
     echo "source ${ROOT6_DIR}/bin/thisroot.sh" >> ~/.zshrc && \
-    cd ${INSTALL_DIR} && rm -rf build src
+    cd ${INSTALL_DIR} && rm -rf ${ROOT6_FILE} build src
 
 # lhapdf --------------------------------------------------------------------- #
 ENV LHAPDF6_DIR=${INSTALL_DIR}/lhapdf6 \
@@ -91,7 +94,7 @@ RUN mkdir ${LHAPDF6_DIR} src && \
     echo "# lhapdf6" >> ~/.zshrc && \
     echo "export LD_LIBRARY_PATH=${LHAPDF6_DIR}/lib:\$LD_LIBRARY_PATH" >> ~/.zshrc && \
     echo "export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.10/site-packages:\$PYTHONPATH" >> ~/.zshrc && \
-    cd ${INSTALL_DIR} && rm -rf src && \
+    cd ${INSTALL_DIR} && rm -rf ${LHAPDF6_FILE} src && \
     export LD_LIBRARY_PATH=${LHAPDF6_DIR}/lib:\$LD_LIBRARY_PATH && \
     export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.10/site-packages:\$PYTHONPATH && \
     lhapdf install NNPDF23_lo_as_0130_qed
@@ -110,13 +113,13 @@ RUN mkdir ${MADGRAPH5_DIR} && \
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib && \
     export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$ROOTSYS/lib && \
     echo "install Delphes" | mg5_aMC && \
-    rm py.py && \
     sed -i 's/# auto_update = 7/auto_update = 600/g' ${MADGRAPH5_DIR}/input/mg5_configuration.txt && \
     sed -i 's/^# lhapdf_py3 = lhapdf-config$/lhapdf_py3 = lhapdf-config/' ${MADGRAPH5_DIR}/input/mg5_configuration.txt && \
     echo "set auto_convert_model T" | mg5_aMC && \
     echo "# delphes3" >> ~/.zshrc && \
     echo "export LD_LIBRARY_PATH=${MADGRAPH5_DIR}/Delphes:\$LD_LIBRARY_PATH" >> ~/.zshrc && \
-    echo "export ROOT_INCLUDE_PATH=${MADGRAPH5_DIR}/Delphes/external:\$ROOT_INCLUDE_PATH" >> ~/.zshrc
+    echo "export ROOT_INCLUDE_PATH=${MADGRAPH5_DIR}/Delphes/external:\$ROOT_INCLUDE_PATH" >> ~/.zshrc && \
+    rm -rf py.py ${MADGRAPH5_FILE}
 
 # ============================================================================ #
 #                                Openssh Server                                #
