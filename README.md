@@ -1,18 +1,102 @@
 # Environment for high energy physics and machine learning lab (HEP ML Lab)
 
-## Description
-`hml-env` is a comprehensive environment designed to facilitate research and
-development at the crossroads of high-energy physics and machine learning.
-Utilizing Docker technology, it offers a seamless, unified environment that
-ensures compatibility and simplifies configuration.
+## Introduction
 
-`hml-env` supports a wide range of essential tools, including:
+`hml-env` is a comprehensive programming environment designed to facilitate research and development at the intersection of high-energy physics and machine learning. 
 
-- Python3.8
-- ROOT6
-- MadGraph5
+With the seamless integration of Docker technology, it offers a unified and user-friendly environment that ensures compatibility and simplifies configuration. Whether you're a researcher or a developer, `hml-env` comes pre-installed with commonly used software, allowing you to quickly start your work in the field of high-energy physics and machine learning phenomenology. It provides a comprehensive and convenient platform to support your projects and experiments.
+
+## Softwares
+
+`hml-env` is based on `nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04`. Below is a pre-installed software list:
+
+| Type                | Version                                                                                         |
+| ------------------- | ----------------------------------------------------------------------------------------------- |
+| General             | shell: zsh (oh-my-zsh)                                                                          |
+|                     | Python: 3.10.13 (Miniconda)                                                                     |
+| High energy physics | ROOT (https://root.cern): 6.26.14                                                               |
+|                     | LHAPDF (https://lhapdf.hepforge.org): 6.5.3                                                     |
+|                     | MadGraph5_aMC@NLO (https://launchpad.net/mg5amcnlo): 3.5.2 (with Pythia8 and Delphes installed) |
+| Machine learning    | TensorFlow: 2.14.0                                                                              |
+|                     | PyTorch: 2.1.0+cu118                                                                            |
+|                     | Jax: 0.4.20 (with cuda)                                                                         |
+|                     | Keras: 3.0.0                                                                                    |
+
+- Set `TF_CPP_MIN_LOG_LEVEL=3` and `TF_FORCE_GPU_ALLOW_GROWTH=true` to reduce running logs and to control GPU memory usage of TensorFlow;
+- Set `XLA_PYTHON_CLIENT_ALLOCATOR=platform` to control GPU memory allocation of Jax, though it’s not recommended by official doc. Tried `XLA_PYTHON_CLIENT_PREALLOCATE=false` but it does not work as normal.
+- Since Keras 3 that support multiple backends is just published, its requirement of TensorFlow > 2.15 could not be meet. According the document ([link](https://keras.io/getting_started/)), we check the universal environment of Colab ([link](https://colab.sandbox.google.com/drive/13cpd3wCwEHpsmypY9o6XB6rXgBm5oSxu)) and make all three backends work in `hml-env`.
+
+## Daily Usage
+
+- Quick start from the command line:
+    
+    ```bash
+    docker run -it --rm --gpus all star9daisy/hml-env:2.0.0
+    ```
+    
+- Run in the background as a workspace then attach into it via `Vscode`:
+    
+    ```bash
+    docker run -itd --gpus all --name my_workspace star9daisy/hml-env:2.0.0
+    ```
+    
+
+`hml-env` also supports for connection to the container via `ssh`. Pick a free port,  set a password for one workspace or take the default one `docker`:
+
+- Quick start from the command line and ssh into it:
+    
+    ```bash
+    # In one shell and keep it open
+    docker run -it --rm --gpus all -p 2222:22  star9daisy/hml-env:2.0.0
+    
+    # In another shell
+    ssh root@<the container ip address>
+    ```
+    
+    Use `docker inspect` to get the ip address of the container we just started that usually starts with 172.17.
+    
+- Run in the background and ssh into it:
+    
+    ```bash
+    docker run -itd --gpus all -p 2222:22 -e PASSWORD=hello --name my_workspace star9daisy/hml-env:2.0.0
+    ssh root@<the container ip address>
+    ```
+    
+
+If It succeeds in connecting the address, `hml-env` will print a banner:
+
+![banner](images/banner.png)
+
+Since we have done port forwarding, it’s possible to ssh to this workspace from remote host:
+
+1. Start a workspace on a remote host. Let’s image we do this on a server:
+    
+    ```bash
+    docker run -itd  \
+    -p 34810:22 \
+    --name my_workspace \
+    --gpus all \
+    -v /mnt/workspace_ssd/star9daisy:/root/workspace_ssd \
+    -v /mnt/workspace_hdd/star9daisy:/root/workspace_hdd \
+    -e PASSWORD=star9daisy \
+    star9daisy/hml-env:2.0.0
+    ```
+    
+2. Create virtual server in the configuration page of your router. It’s better to make the external port the same as the internal one.
+3. Make sure the IP address of the server is static or something same during a small period.
+4. Then let’s ssh into it using our own laptop (local host):
+    
+    ```bash
+    ssh root@<your server ip address> -p 34810
+    ```
+    
+    If it’s all good, you will see the above banner.
 
 ## History
+
+### 2.0.0
+- Upgrade python:3.8 to 3.10
+- Support for Keras 3 and all backends
 
 ### 1.8.0
 - Upgrade cuda:11.2.2 to 11.8.0
