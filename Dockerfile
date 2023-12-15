@@ -28,20 +28,22 @@ RUN apt-get update && apt-get install -yq \
     gfortran make rsync ghostscript gnuplot && \
     apt-get clean
 
+# zsh ------------------------------------------------------------------------ #
+RUN apt-get -yq install zsh && \
+    git config --global http.proxy socks5://172.17.0.1:7890 && \
+    git config --global https.proxy socks5://172.17.0.1:7890 && \
+    sh -c "$(wget -O- https://install.ohmyz.sh)" && \
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
+    sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc && \
+    apt-get clean
+
 # proxy ---------------------------------------------------------------------- #
 RUN echo "alias setproxy=\"export ALL_PROXY=socks5://172.17.0.1:7890\"" >> ~/.zshrc && \
     echo "alias unsetproxy=\"unset ALL_PROXY\"" >> ~/.zshrc && \
     echo "alias ip=\"curl http://ip-api.com/json\"" >> ~/.zshrc && \
     git config --global http.proxy socks5://172.17.0.1:7890 && \
     git config --global https.proxy socks5://172.17.0.1:7890
-
-# zsh ------------------------------------------------------------------------ #
-RUN apt-get -yq install zsh && \
-    sh -c "$(wget -O- https://install.ohmyz.sh)" && \
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
-    sed -i 's/plugins=(git)/plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc && \
-    apt-get clean
 
 # miniconda3 ----------------------------------------------------------------- #
 ENV MINICONDA3_DIR=/root/miniconda3 \
