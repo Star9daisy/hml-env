@@ -4,8 +4,19 @@ FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
 #                                Basic Settings                                #
 # ============================================================================ #
 ENV DEBIAN_FRONTEND=noninteractive
-ENV SHARED_DIR=share INSTALL_DIR=/root/softwares
-ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+ENV SHARED_DIR=share \
+    INSTALL_DIR=/root/softwares
+
+# Install locales and generate en_US.UTF-8
+RUN apt-get update && \
+    apt-get install -y locales && \
+    locale-gen en_US.UTF-8 && \
+    dpkg-reconfigure locales && \
+    apt-get clean
+
+# Set environment variables for locale
+ENV LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8
 
 # ============================================================================ #
 #                              Basic Dependencies                              #
