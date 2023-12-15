@@ -88,6 +88,9 @@ RUN mkdir ${LHAPDF6_DIR} src && \
     wget -O ${LHAPDF6_FILE} https://lhapdf.hepforge.org/downloads/?f=${LHAPDF6_FILE} && \
     tar xf ${LHAPDF6_FILE} --strip=1 --directory=src && cd src && \
     ./configure --prefix=${LHAPDF6_DIR} && \
+    sed -i -e '/if libpy is None:/s/^/#/' \
+        -e '/print("No libpython found in expected location/s/^/#/' \
+        -e '/sys.exit(1)/s/^/#/' ./wrappers/python/build.py && \
     sed -i 's/pyargs += " " + libpy/pyargs += " " + "-L\/root\/miniconda3\/lib -lpython3.10"/' ./wrappers/python/build.py && \
     make -j $(nproc) && make install && \
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:~/miniconda3/lib" && \
