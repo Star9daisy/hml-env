@@ -70,11 +70,11 @@ ENV PATH=${MINICONDA3_DIR}/bin:${PATH}
 #                                 Main Programs                                #
 # ============================================================================ #
 # python --------------------------------------------------------------------- #
-RUN pip install --no-cache-dir numpy pandas matplotlib
-RUN pip install --no-cache-dir tensorflow==2.14
-RUN pip install --no-cache-dir --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-RUN pip install --no-cache-dir torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-RUN pip install --no-cache-dir keras==3.0.0 --upgrade
+# RUN pip install --no-cache-dir numpy pandas matplotlib
+# RUN pip install --no-cache-dir tensorflow==2.14
+# RUN pip install --no-cache-dir --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+# RUN pip install --no-cache-dir torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# RUN pip install --no-cache-dir keras==3.0.0 --upgrade
 
 ENV TF_CPP_MIN_LOG_LEVEL=3 \
     TF_FORCE_GPU_ALLOW_GROWTH=true \
@@ -118,7 +118,8 @@ RUN mkdir ${LHAPDF6_DIR} src && \
 
 # madgraph5 ------------------------------------------------------------------ #
 ENV MADGRAPH5_DIR=${INSTALL_DIR}/madgraph5 \
-    MADGRAPH5_FILE=MG5_aMC_v3.5.2.tar.gz
+    MADGRAPH5_FILE=MG5_aMC_v3.5.3.tar.gz
+RUN pip install six
 RUN mkdir ${MADGRAPH5_DIR} && \ 
     wget -O ${MADGRAPH5_FILE} https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/${MADGRAPH5_FILE} && \
     tar xf ${MADGRAPH5_FILE} --strip=1 --directory=${MADGRAPH5_DIR} && \
@@ -161,7 +162,7 @@ RUN echo '#!/bin/zsh' > /start.sh \
 EXPOSE 22
 
 # Setup banner
-ENV VERSION 2.0.0
+ENV VERSION 2.1.0
 RUN apt install figlet && \
     figlet -f slant "hml env ${VERSION}" >> /etc/banner.txt && \
     sed -i 's/#Banner none/Banner \/etc\/banner.txt/' /etc/ssh/sshd_config && \
