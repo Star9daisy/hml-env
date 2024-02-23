@@ -27,10 +27,22 @@ docker pull star9daisy/hml-env:2.0.0
 | High energy physics | [ROOT](https://root.cern): 6.26.14                                                               |
 |                     | [LHAPDF](https://lhapdf.hepforge.org): 6.5.3                                                     |
 |                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.2 (with Pythia8 and Delphes installed) |
-| Machine learning    | TensorFlow: 2.14.0                                                                               |
-|                     | PyTorch: 2.1.0+cu118                                                                             |
-|                     | Jax: 0.4.20 (with cuda)                                                                          |
-|                     | Keras: 3.0.0                                                                                     |
+
+To set up the environment for different machine learning frameworks, use the following commands:
+
+```bash
+RUN pip install tensorflow==2.14
+RUN pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+RUN pip install torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN pip install keras==3.0.0 --upgrade
+```
+
+| Type             | Version                 |
+| ---------------- | ----------------------- |
+| Machine learning | TensorFlow: 2.14.0      |
+|                  | PyTorch: 2.1.0+cu118    |
+|                  | Jax: 0.4.20 (with cuda) |
+|                  | Keras: 3.0.0            |
 
 - Set `TF_CPP_MIN_LOG_LEVEL=3` and `TF_FORCE_GPU_ALLOW_GROWTH=true` to reduce running logs and to control GPU memory usage of TensorFlow;
 - Set `XLA_PYTHON_CLIENT_ALLOCATOR=platform` to control GPU memory allocation of Jax, though it’s not recommended by official doc. Tried `XLA_PYTHON_CLIENT_PREALLOCATE=false` but it does not work as normal.
@@ -103,6 +115,9 @@ Since we have done port forwarding, it’s possible to ssh to this workspace fro
     If it’s all good, you will see the above banner.
 
 ## History
+
+### 2.1.0
+- Remove the deep learning pacakages to reduce the size of the image (19.7GB -> 12.8GB)
 
 ### 2.0.0
 - Upgrade python:3.8 to 3.10
