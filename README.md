@@ -116,6 +116,9 @@ Since we have done port forwarding, it’s possible to ssh to this workspace fro
 
 ## History
 
+### 2.2.0
+- Upgrade python 3.10 to 3.11
+
 ### 2.1.0
 - Remove the deep learning pacakages to reduce the size of the image (19.7GB -> 12.8GB)
 
