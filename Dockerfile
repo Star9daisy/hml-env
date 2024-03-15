@@ -58,7 +58,7 @@ RUN echo "alias setproxy=\"export ALL_PROXY=socks5://172.17.0.1:7890\"" >> ~/.zs
 
 # miniconda3 ----------------------------------------------------------------- #
 ENV MINICONDA3_DIR=/root/miniconda3 \
-    MINICONDA3_FILE=Miniconda3-py310_23.10.0-1-Linux-x86_64.sh
+    MINICONDA3_FILE=Miniconda3-py311_23.11.0-1-Linux-x86_64.sh
 RUN mkdir ${MINICONDA3_DIR} && \
     wget -O ${MINICONDA3_FILE} https://repo.anaconda.com/miniconda/${MINICONDA3_FILE} && \
     bash ${MINICONDA3_FILE} -b -u -p ${MINICONDA3_DIR} && \
