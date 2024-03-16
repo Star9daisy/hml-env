@@ -104,16 +104,16 @@ RUN mkdir ${LHAPDF6_DIR} src && \
     sed -i -e '/if libpy is None:/s/^/#/' \
         -e '/print("No libpython found in expected location/s/^/#/' \
         -e '/sys.exit(1)/s/^/#/' ./wrappers/python/build.py && \
-    sed -i 's/pyargs += " " + libpy/pyargs += " " + "-L\/root\/miniconda3\/lib -lpython3.10"/' ./wrappers/python/build.py && \
+    sed -i 's/pyargs += " " + libpy/pyargs += " " + "-L\/root\/miniconda3\/lib -lpython3.11"/' ./wrappers/python/build.py && \
     make -j $(nproc) && make install && \
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:~/miniconda3/lib" && \
     ln -fs ${LHAPDF6_DIR}/bin/lhapdf* /usr/local/bin/ && \
     echo "# lhapdf6" >> ~/.zshrc && \
     echo "export LD_LIBRARY_PATH=${LHAPDF6_DIR}/lib:\$LD_LIBRARY_PATH" >> ~/.zshrc && \
-    echo "export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.10/site-packages:\$PYTHONPATH" >> ~/.zshrc && \
+    echo "export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.11/site-packages:\$PYTHONPATH" >> ~/.zshrc && \
     cd ${INSTALL_DIR} && rm -rf ${LHAPDF6_FILE} src && \
     export LD_LIBRARY_PATH=${LHAPDF6_DIR}/lib:\$LD_LIBRARY_PATH && \
-    export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.10/site-packages:\$PYTHONPATH && \
+    export PYTHONPATH=${LHAPDF6_DIR}/lib/python3.11/site-packages:\$PYTHONPATH && \
     lhapdf install NNPDF23_lo_as_0130_qed
 
 # madgraph5 ------------------------------------------------------------------ #
