@@ -116,6 +116,9 @@ Since we have done port forwarding, it’s possible to ssh to this workspace fro
 
 ## History
 
+### 2.2.1
+- Fixed the issue of incorrect LHAPDF library path
+
 ### 2.2.0
 - Upgrade python 3.10 to 3.11
 
