@@ -13,7 +13,7 @@ With the seamless integration of Docker technology, it offers a unified and user
 
 ## Installtion
 ```bash
-docker pull star9daisy/hml-env:2.0.0
+docker pull star9daisy/hml-env:2.2.1
 ```
 
 ## Softwares
@@ -23,18 +23,18 @@ docker pull star9daisy/hml-env:2.0.0
 | Type                | Version                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
 | General             | shell: zsh (oh-my-zsh)                                                                           |
-|                     | Python: 3.10.13 (Miniconda)                                                                      |
+|                     | Python: 3.11.5 (Miniconda)                                                                       |
 | High energy physics | [ROOT](https://root.cern): 6.26.14                                                               |
 |                     | [LHAPDF](https://lhapdf.hepforge.org): 6.5.3                                                     |
-|                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.2 (with Pythia8 and Delphes installed) |
+|                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.3 (with Pythia8 and Delphes installed) |
 
 To set up the environment for different machine learning frameworks, use the following commands:
 
 ```bash
-RUN pip install tensorflow==2.14
-RUN pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-RUN pip install torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-RUN pip install keras==3.0.0 --upgrade
+pip install tensorflow==2.14
+pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+pip install torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install keras --upgrade
 ```
 
 | Type             | Version                 |
@@ -47,6 +47,55 @@ RUN pip install keras==3.0.0 --upgrade
 - Set `TF_CPP_MIN_LOG_LEVEL=3` and `TF_FORCE_GPU_ALLOW_GROWTH=true` to reduce running logs and to control GPU memory usage of TensorFlow;
 - Set `XLA_PYTHON_CLIENT_ALLOCATOR=platform` to control GPU memory allocation of Jax, though it’s not recommended by official doc. Tried `XLA_PYTHON_CLIENT_PREALLOCATE=false` but it does not work as normal.
 - Since Keras 3 that support multiple backends is just published, its requirement of TensorFlow > 2.15 could not be meet. According the [document](https://keras.io/getting_started/), we check the universal environment of [Colab](https://colab.sandbox.google.com/drive/13cpd3wCwEHpsmypY9o6XB6rXgBm5oSxu) and make all three backends work in `hml-env`.
+
+Or if you want to use `hep-ml-lab` for studies in high-energy physics and machine learning, you can use the following command:
+
+```bash
+pip install hep-ml-lab
+```
+
+It won't install any deep learning frameworks but only `keras`. The 3.0 version of `keras` requires `tensorflow` > 2.16, which now needs a little more effort to set up to recognize GPUs correctly. Check the discussion [here](https://github.com/tensorflow/tensorflow/issues/63362). Let's first install the latest `tensorflow`:
+
+```base
+pip install tensorflow[and-cuda]
+```
+
+Then run the following script to set the `LD_LIBRARY_PATH` for `tensorflow` to recognize the GPUs:
+
+```bash
+# set_nvidia.sh
+
+# Attempt to locate the NVIDIA cudnn library file using Python.
+NVIDIA_DIR=$(python -c "import nvidia.cudnn; print(nvidia.cudnn.__file__)" 2>/dev/null)
+
+# Check if the NVIDIA directory variable is set (i.e., cudnn was found).
+if [ ! -z "$NVIDIA_DIR" ]; then
+    # Get the parent directory of the directory containing the __file__
+    NVIDIA_DIR=$(dirname $(dirname $NVIDIA_DIR))
+
+    # Iterate over all directories in the NVIDIA package directory.
+    for dir in $NVIDIA_DIR/*; do
+        # Check if the directory has a 'lib' subdirectory.
+        if [ -d "$dir/lib" ]; then
+            # Prepend the library path to LD_LIBRARY_PATH.
+            export LD_LIBRARY_PATH="$dir/lib:$LD_LIBRARY_PATH"
+        fi
+    done
+fi
+```
+
+```bash
+bash set_nvidia.sh
+```
+
+To test if the GPUs are correctly recognized, use the following commands:
+
+```bash
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+# If it is set up successfully, you will see the following output:
+# [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+```
 
 ## Daily Usage
 
