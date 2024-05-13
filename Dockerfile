@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04
 
 # ============================================================================ #
 #                                Basic Settings                                #
@@ -24,8 +24,7 @@ ENV LC_ALL=en_US.UTF-8 \
 WORKDIR ${INSTALL_DIR}
 
 # general -------------------------------------------------------------------- #
-RUN rm /etc/apt/sources.list.d/cuda.list && \
-    apt-get update && apt-get install -yq \
+RUN apt-get update && apt-get install -yq \
     apt-utils software-properties-common \
     vim wget curl tree duc screen && \
     apt-add-repository ppa:git-core/ppa && \
@@ -118,7 +117,7 @@ RUN mkdir ${LHAPDF6_DIR} src && \
 
 # madgraph5 ------------------------------------------------------------------ #
 ENV MADGRAPH5_DIR=${INSTALL_DIR}/madgraph5 \
-    MADGRAPH5_FILE=MG5_aMC_v3.5.3.tar.gz
+    MADGRAPH5_FILE=MG5_aMC_v3.5.4.tar.gz
 RUN pip install six
 RUN mkdir ${MADGRAPH5_DIR} && \ 
     wget -O ${MADGRAPH5_FILE} https://launchpad.net/mg5amcnlo/3.0/3.5.x/+download/${MADGRAPH5_FILE} && \
