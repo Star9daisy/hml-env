@@ -165,6 +165,12 @@ Since we have done port forwarding, it’s possible to ssh to this workspace fro
 
 ## History
 
+### 2.3.0
+- Upgrade cuda:11.8.0 to 12.2.2 to support the all backends of Keras 3
+- Upgrade ubuntu:20.04 to 22.04
+- Upgrade Madgraph5_aMC@NLO:3.5.3 (download link is missing) to 3.5.4
+- Drop removing cuda.list
+
 ### 2.2.1
 - Fixed the issue of incorrect LHAPDF library path
 
