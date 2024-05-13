@@ -13,7 +13,7 @@ With the seamless integration of Docker technology, it offers a unified and user
 
 ## Installtion
 ```bash
-docker pull star9daisy/hml-env:2.2.1
+docker pull star9daisy/hml-env
 ```
 
 ## Softwares
@@ -26,23 +26,20 @@ docker pull star9daisy/hml-env:2.2.1
 |                     | Python: 3.11.5 (Miniconda)                                                                       |
 | High energy physics | [ROOT](https://root.cern): 6.26.14                                                               |
 |                     | [LHAPDF](https://lhapdf.hepforge.org): 6.5.3                                                     |
-|                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.3 (with Pythia8 and Delphes installed) |
+|                     | [MadGraph5_aMC@NLO](https://launchpad.net/mg5amcnlo): 3.5.4 (with Pythia8 and Delphes installed) |
 
-To set up the environment for different machine learning frameworks, use the following commands:
+To set up an univeral environment for PyTorch, TensorFlow, Jax, use the following commands:
 
 ```bash
-pip install tensorflow==2.14
-pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-pip install torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip install keras --upgrade
+pip install torch==2.3.0 torchvision==0.18.0 tensorflow==2.16.1 "jax[cuda12]==0.4.28" flax==0.8.3
 ```
 
-| Type             | Version                 |
-| ---------------- | ----------------------- |
-| Machine learning | TensorFlow: 2.14.0      |
-|                  | PyTorch: 2.1.0+cu118    |
-|                  | Jax: 0.4.20 (with cuda) |
-|                  | Keras: 3.0.0            |
+| Type             | Version              |
+| ---------------- | -------------------- |
+| Machine learning | TensorFlow: 2.16.1   |
+|                  | PyTorch: 2.3.0+cu121 |
+|                  | Jax: 0.4.28          |
+|                  | Keras: 3.3.3         |
 
 - Set `TF_CPP_MIN_LOG_LEVEL=3` and `TF_FORCE_GPU_ALLOW_GROWTH=true` to reduce running logs and to control GPU memory usage of TensorFlow;
 - Set `XLA_PYTHON_CLIENT_ALLOCATOR=platform` to control GPU memory allocation of Jax, though it’s not recommended by official doc. Tried `XLA_PYTHON_CLIENT_PREALLOCATE=false` but it does not work as normal.
@@ -54,7 +51,23 @@ Or if you want to use `hep-ml-lab` for studies in high-energy physics and machin
 pip install hep-ml-lab
 ```
 
-It won't install any deep learning frameworks but only `keras`. The 3.0 version of `keras` requires `tensorflow` > 2.16, which now needs a little more effort to set up to recognize GPUs correctly. Check the discussion [here](https://github.com/tensorflow/tensorflow/issues/63362). Let's first install the latest `tensorflow`:
+You could check whether these framworks could recognize GPUs by running the following commands:
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+# True
+```
+
+```bash
+python -c "import jax; print(jax.default_backend())"
+# gpu
+```
+
+```bash
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+# [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+```
+For the version < 2.3.0, the `tensorflow` may not recognize the GPUs correctly. There's a discussion [here](https://github.com/tensorflow/tensorflow/issues/63362). To solve this, let's first install the latest `tensorflow`:
 
 ```base
 pip install tensorflow[and-cuda]
