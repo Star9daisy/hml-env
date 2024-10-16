@@ -123,7 +123,44 @@ RUN echo "set delphes_path ${DELPHES_DIR}" | mg5_aMC && \
     rm py.py
 
 # ============================================================================ #
+#                                Openssh Server                                #
+# ============================================================================ #
+# Dependencies
+RUN apt-get update && apt-get install -y openssh-server && apt clean
+
+# Change ssh config
+RUN mkdir /var/run/sshd && \
+    sed -i '/#\?PermitRootLogin/s/.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+# Default password
+ENV PASSWORD=docker
+
+# Change the default shell for root user from bash to zsh
+RUN chsh -s /bin/zsh root
+
+# Creating a new script to start both sshd and any command passed as an argument
+# Change password at runtime
+RUN echo '#!/bin/zsh' > /start.sh \
+    && echo '/usr/sbin/sshd' >> /start.sh \
+    && echo 'echo "root:${PASSWORD}" | chpasswd' >> /start.sh \
+    && echo 'exec "$@"' >> /start.sh \
+    && chmod +x /start.sh
+
+EXPOSE 22
+
+# https://stackoverflow.com/questions/34630571/docker-env-variables-not-set-while-log-via-shell
+RUN env | grep _ >> /etc/environment
+
+# ============================================================================ #
 #                                    Ending                                    #
 # ============================================================================ #
+# Setup banner
+ENV VERSION=3.0.0
+RUN apt install figlet && \
+    figlet -f slant "hml env ${VERSION}" >> /etc/banner.txt && \
+    sed -i 's/#Banner none/Banner \/etc\/banner.txt/' /etc/ssh/sshd_config && \
+    chmod -x /etc/update-motd.d/*
+
 WORKDIR /root/workspace
-CMD ["zsh"]
+CMD ["/start.sh", "zsh"]
