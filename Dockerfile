@@ -6,9 +6,19 @@ FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive \
     INSTALL_DIR=/root/softwares
 
+ENV HML_ENV_PYTHON_VERSION=3.10
 RUN apt-get update && apt-get install -y \
-    wget aria2 git zsh vim python3 python3-pip python3-dev && \
+    aria2 \
+    curl \
+    git \
+    python${HML_ENV_PYTHON_VERSION} \
+    python${HML_ENV_PYTHON_VERSION}-dev \
+    vim \
+    wget \
+    zip \
+    zsh && \
     apt clean
+RUN curl https://bootstrap.pypa.io/get-pip.py | python${HML_ENV_PYTHON_VERSION}
 
 # Oh-my-zsh ------------------------------------------------------------------ #
 RUN sh -c "$(wget -O- https://install.ohmyz.sh)" && \
