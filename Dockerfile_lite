@@ -125,6 +125,12 @@ RUN echo "set delphes_path ${DELPHES_DIR}" | mg5_aMC && \
 # ============================================================================ #
 #                          Machine Learning Frameworks                         #
 # ============================================================================ #
+# Suppress TensorFlow logs
+ENV TF_CPP_MIN_LOG_LEVEL=3
+
+# Limit TensorFlow GPU memory growth
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
+
 RUN pip install tensorflow==2.16.1
 
 # ============================================================================ #

@@ -125,6 +125,14 @@ RUN echo "set delphes_path ${DELPHES_DIR}" | mg5_aMC && \
 # ============================================================================ #
 #                          Machine Learning Frameworks                         #
 # ============================================================================ #
+# Suppress TensorFlow logs
+ENV TF_CPP_MIN_LOG_LEVEL=3
+
+# Limit TensorFlow and Jax GPU memory growth
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
+ENV XLA_PYTHON_CLIENT_PREALLOCATE=false
+ENV XLA_PYTHON_CLIENT_ALLOCATOR=platform
+
 RUN pip install torch==2.3.0
 RUN pip install tensorflow==2.16.1
 RUN pip install jax[cuda12]==0.4.28
