@@ -1,5 +1,8 @@
 # HML ENV
 ![Docker Pulls](https://img.shields.io/docker/pulls/star9daisy/hml-env)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/star9daisy/hml-env/3.0.0-base?label=base%20size&color=green)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/star9daisy/hml-env/3.0.0-lite?label=lite%20size&color=orange)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/star9daisy/hml-env/3.0.0-dev?label=dev%20size&color=red)
 
 ## Introduction
 
