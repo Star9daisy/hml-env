@@ -16,20 +16,20 @@ The `hml-env` provides a development environment for interdisciplinary research 
 
 ## Configurations
 
-|  | `base` | `lite` | `dev` |
-| --- | --- | --- | --- |
-| Ubuntu 22.04 | ✔ | ✔ | ✔ |
-| CUDA 12.2.2 |  | ✔ | ✔ |
-| cuDNN 8 |  | ✔ | ✔ |
-| ROOT 6.28.12 | ✔ | ✔ | ✔ |
-| Delphes 3.5.0 | ✔ | ✔ | ✔ |
-| Madgraph5 (MG5) 3.4.2 | ✔ | ✔ | ✔ |
-| HepMC 2.06.09 (by MG5) | ✔ | ✔ | ✔ |
-| LHAPDF 6.5.4 (by MG5)  | ✔ | ✔ | ✔ |
-| PYTHIA 8.311 (by MG5) | ✔ | ✔ | ✔ |
-| Tensorflow 2.16.1 (include Keras 3) |  | ✔ | ✔ |
-| PyTorch 2.3.0 |  |  | ✔ |
-| Jax 0.4.28 |  |  | ✔ |
+|                                     | `base` | `lite` | `dev` |
+| ----------------------------------- | ------ | ------ | ----- |
+| Ubuntu 22.04                        | ✔      | ✔      | ✔     |
+| CUDA 12.2.2                         |        | ✔      | ✔     |
+| cuDNN 8                             |        | ✔      | ✔     |
+| ROOT 6.28.12                        | ✔      | ✔      | ✔     |
+| Delphes 3.5.0                       | ✔      | ✔      | ✔     |
+| Madgraph5 (MG5) 3.4.2               | ✔      | ✔      | ✔     |
+| HepMC 2.06.09 (by MG5)              | ✔      | ✔      | ✔     |
+| LHAPDF 6.5.4 (by MG5)               | ✔      | ✔      | ✔     |
+| PYTHIA 8.311 (by MG5)               | ✔      | ✔      | ✔     |
+| Tensorflow 2.16.1 (include Keras 3) |        | ✔      | ✔     |
+| PyTorch 2.3.0                       |        |        | ✔     |
+| Jax 0.4.28                          |        |        | ✔     |
 
 - `lite` and `dev` are built based on the image `nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04`. Before starting the container, you need to install the NVIDIA Container Toolkit. Please refer to [here](https://github.com/NVIDIA/nvidia-container-toolkit) for installation instructions.
 
